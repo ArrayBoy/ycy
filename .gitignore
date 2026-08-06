@@ -1,37 +1,28 @@
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-Icon
-._*
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.FAKESECRET_m4n5o6p7q8r9s0t1u2v3
-
-# Editor / IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-.project
-.settings/
-
-# Logs & temp
+# Logs
+logs
 *.log
-*.tmp
-*.temp
-.cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Dependencies (if added later)
-node_modules/
-.npm/
-dist/
-build/
-.parcel-cache/
-.next/
-.vite/
+node_modules
+dist
+dist-ssr
+*.local
+_legacy
+
+# 注意：docs 为构建产物目录，允许提交到仓库（用于 GitHub Pages 等）
+# 请勿将 docs 加入忽略列表
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
