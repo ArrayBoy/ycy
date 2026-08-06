@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>YCY · 宝宝成长站</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --sky: #7ec8e3;
+      --sky-deep: #4aa8c9;
+      --mint: #6bc4a6;
+      --coral: #f08a6b;
+      --peach: #f6b26b;
+      --ink: #2c3e50;
+      --ink-soft: #5a6d7e;
+      --cream: #fff9f4;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", sans-serif;
+      color: var(--ink);
+      background: var(--sky);
+    }
+
+    body {
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stage {
+      min-height: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding:
+        calc(28px + var(--safe-top))
+        22px
+        calc(28px + var(--safe-bottom));
+      background:
+        radial-gradient(ellipse 120% 80% at 10% -10%, #ffe8c8 0%, transparent 55%),
+        radial-gradient(ellipse 100% 70% at 100% 0%, #b8e8f5 0%, transparent 50%),
+        linear-gradient(165deg, #9ad4ea 0%, #c5ebe0 42%, #ffe4c8 100%);
+      overflow: hidden;
+    }
+
+    /* decorative blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+      pointer-events: none;
+      opacity: 0.45;
+      animation: float 8s ease-in-out infinite;
+    }
+    .blob-a {
+      width: 140px; height: 140px;
+      top: 12%; left: -40px;
+      background: rgba(255, 255, 255, 0.35);
+      animation-delay: 0s;
+    }
+    .blob-b {
+      width: 90px; height: 90px;
+      top: 38%; right: -24px;
+      background: rgba(246, 178, 107, 0.35);
+      animation-delay: -2.5s;
+    }
+    .blob-c {
+      width: 110px; height: 110px;
+      bottom: 18%; left: -30px;
+      background: rgba(107, 196, 166, 0.3);
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-14px) scale(1.04); }
+    }
+
+    .hero {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 12px 8px 28px;
+      animation: rise 0.7s ease-out both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .brand {
+      font-family: "ZCOOL KuaiLe", cursive;
+      font-size: clamp(52px, 16vw, 68px);
+      line-height: 1;
+      letter-spacing: 0.06em;
+      color: #fff;
+      text-shadow:
+        0 4px 0 rgba(74, 168, 201, 0.35),
+        0 10px 28px rgba(44, 62, 80, 0.18);
+    }
+
+    .tagline {
+      margin-top: 14px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink-soft);
+      letter-spacing: 0.12em;
+    }
+
+    .menu {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      align-content: start;
+      padding-top: 8px;
+    }
+
+    .menu a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 128px;
+      padding: 18px 12px;
+      text-decoration: none;
+      color: var(--ink);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 10px 28px rgba(44, 62, 80, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      animation: rise 0.65s ease-out both;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .menu a:nth-child(1) { animation-delay: 0.08s; }
+    .menu a:nth-child(2) { animation-delay: 0.16s; }
+    .menu a:nth-child(3) { animation-delay: 0.24s; }
+    .menu a:nth-child(4) { animation-delay: 0.32s; }
+    .menu a:nth-child(5) { animation-delay: 0.40s; }
+    .menu a:nth-child(6) { animation-delay: 0.48s; }
+
+    .menu a:active {
+      transform: scale(0.96);
+      box-shadow: 0 4px 14px rgba(44, 62, 80, 0.1);
+    }
+
+    .icon-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      line-height: 1;
+      box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    .menu a[data-key="donghua"] .icon-wrap {
+      background: linear-gradient(145deg, #9be8c8, #5fbf9a);
+    }
+    .menu a[data-key="erge"] .icon-wrap {
+      background: linear-gradient(145deg, #ffb4a2, #f08a6b);
+    }
+    .menu a[data-key="fushi"] .icon-wrap {
+      background: linear-gradient(145deg, #ffd08a, #f0a94a);
+    }
+    .menu a[data-key="gushi"] .icon-wrap {
+      background: linear-gradient(145deg, #9fd8f0, #5eb3d4);
+    }
+    .menu a[data-key="chengzhang"] .icon-wrap {
+      background: linear-gradient(145deg, #fcd34d, #f59e0b);
+    }
+    .menu a[data-key="xuexi"] .icon-wrap {
+      background: linear-gradient(145deg, #5eead4, #14b8a6);
+    }
+
+    .label {
+      font-family: "ZCOOL KuaiLe", cursive;
+      font-size: 26px;
+      letter-spacing: 0.08em;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--ink-soft);
+      letter-spacing: 0.04em;
+      opacity: 0.85;
+    }
+
+    .footer {
+      position: relative;
+      z-index: 1;
+      margin-top: auto;
+      padding-top: 28px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--ink-soft);
+      letter-spacing: 0.08em;
+      opacity: 0.7;
+      animation: rise 0.8s ease-out 0.4s both;
+    }
+
+    /* SVG icons inside colored wraps */
+    .icon-wrap svg {
+      width: 32px;
+      height: 32px;
+      fill: #fff;
+      filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="blob blob-a" aria-hidden="true"></div>
+    <div class="blob blob-b" aria-hidden="true"></div>
+    <div class="blob blob-c" aria-hidden="true"></div>
+
+    <header class="hero">
+      <h1 class="brand">杨宸烨</h1>
+      <p class="tagline">宝宝成长站</p>
+    </header>
+
+    <nav class="menu" aria-label="功能菜单">
+      <a href="pages/fushi/fushi.html" data-key="fushi">
+        <span class="icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8.1 3.5c.4-.9 1.7-.9 2.1 0L12 6.2l1.8-2.7c.4-.9 1.7-.9 2.1 0l1.5 2.9 3.2.5c1 .1 1.4 1.3.7 2l-2.3 2.2.5 3.2c.2 1-.8 1.7-1.7 1.3L15 14.2l-2.9 1.5c-.9.5-1.9-.3-1.7-1.3l.5-3.2-2.3-2.2c-.7-.7-.3-1.9.7-2l3.2-.5L8.1 3.5zM4 18h16v2H4v-2z"/></svg>
+        </span>
+        <span class="label">辅食</span>
+        <span class="hint">营养菜谱</span>
+      </a>
+
+      <a href="pages/chengzhang/chengzhang.html" data-key="chengzhang">
+        <span class="icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.8 7.2 17l.9-5.4L4.2 7.7l5.4-.8L12 2zm-7 18h14v2H5v-2z"/></svg>
+        </span>
+        <span class="label">成长</span>
+        <span class="hint">记录点滴</span>
+      </a>
+
+      <a href="pages/donghua/donghua.html" data-key="donghua">
+        <span class="icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1.5l3.2-1.8a1 1 0 0 1 1.5.87v9.86a1 1 0 0 1-1.5.87L16 14.5V16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z"/></svg>
+        </span>
+        <span class="label">动画</span>
+        <span class="hint">快乐看动画</span>
+      </a>
+
+      <a href="pages/erge/erge.html" data-key="erge">
+        <span class="icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>
+        </span>
+        <span class="label">儿歌</span>
+        <span class="hint">唱唱跳跳</span>
+      </a>
+
+      <a href="pages/gushi/gushi.html" data-key="gushi">
+        <span class="icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M6 4h9a3 3 0 0 1 3 3v13l-4.5-2.5L9 20V7a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v11H3V7a3 3 0 0 1 3-3z"/></svg>
+        </span>
+        <span class="label">故事</span>
+        <span class="hint">睡前听听</span>
+      </a>
+
+      <a href="pages/xuexi/xuexi.html" data-key="xuexi">
+        <span class="icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v3.32L12 20l7-3.5v-3.32L12 16.5 5 13.18z"/></svg>
+        </span>
+        <span class="label">学习</span>
+        <span class="hint">启蒙小课堂</span>
+      </a>
+    </nav>
+
+    <p class="footer">轻轻点一点，开启今天的陪伴</p>
+  </div>
+</body>
+</html>

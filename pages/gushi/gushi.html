@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>故事</title>
+  <style>
+    :root {
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --accent: #0369a1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(160deg, #f0f9ff 0%, #e0f2fe 45%, #bae6fd 100%);
+      color: #075985;
+    }
+    .topbar {
+      flex-shrink: 0;
+      padding: calc(10px + var(--safe-top)) 16px 10px;
+      display: flex;
+      align-items: center;
+    }
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(7, 89, 133, 0.12);
+    }
+    .home-link:active { transform: scale(0.97); }
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px calc(24px + var(--safe-bottom));
+    }
+    .card {
+      text-align: center;
+      padding: 48px 40px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 24px;
+      box-shadow: 0 12px 40px rgba(7, 89, 133, 0.12);
+      max-width: 320px;
+      width: 100%;
+    }
+    h1 { font-size: 42px; font-weight: 700; letter-spacing: 0.08em; }
+    p { margin-top: 16px; font-size: 16px; color: #0369a1; opacity: 0.85; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a class="home-link" href="../../index.html">‹ 返回首页</a>
+  </div>
+  <div class="main">
+    <div class="card">
+      <h1>故事</h1>
+      <p>育儿 · 故事页面</p>
+    </div>
+  </div>
+</body>
+</html>
