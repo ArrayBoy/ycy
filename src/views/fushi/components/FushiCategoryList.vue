@@ -1,21 +1,3 @@
-<script setup lang="ts">
-import type { FushiMode, Recipe } from '../config'
-import { DISH_TYPE_ICON } from '../config'
-
-defineProps<{
-  active: boolean
-  mode: FushiMode
-  order: string[]
-  map: Record<string, { recipe: Recipe; index: number }[]>
-  categoryNumber: (name: string) => string
-  displayGroupName: (key: string) => string
-}>()
-
-defineEmits<{
-  select: [key: string]
-}>()
-</script>
-
 <template>
   <div class="view" :class="{ active }">
     <button
@@ -37,3 +19,21 @@ defineEmits<{
     </button>
   </div>
 </template>
+
+<script setup lang="ts">
+import type { FushiMode, Recipe } from '../config'
+import { DISH_TYPE_ICON } from '../config'
+
+defineProps<{
+  active: boolean
+  mode: FushiMode
+  order: string[]
+  map: Record<string, { recipe: Recipe; index: number }[]>
+  categoryNumber: (name: string) => string
+  displayGroupName: (key: string) => string
+}>()
+
+defineEmits<{
+  select: [key: string]
+}>()
+</script>

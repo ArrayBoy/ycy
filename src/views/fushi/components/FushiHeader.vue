@@ -1,17 +1,3 @@
-<script setup lang="ts">
-import { RouterLink } from 'vue-router'
-
-defineProps<{
-  title: string
-  subtitle: string
-  isHome: boolean
-}>()
-
-defineEmits<{
-  back: []
-}>()
-</script>
-
 <template>
   <header class="header">
     <button
@@ -30,3 +16,17 @@ defineEmits<{
     <RouterLink class="site-home-link" :class="{ show: isHome }" to="/">返回首页</RouterLink>
   </header>
 </template>
+
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+
+defineProps<{
+  title: string
+  subtitle: string
+  isHome: boolean
+}>()
+
+defineEmits<{
+  back: []
+}>()
+</script>

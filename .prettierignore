@@ -1,0 +1,11 @@
+docs
+dist
+node_modules
+pnpm-lock.yaml
+*.min.js
+*.gz
+_legacy
+public/**/*.JPG
+public/**/*.jpg
+public/**/*.png
+*.md

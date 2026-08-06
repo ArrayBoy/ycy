@@ -1,9 +1,3 @@
-<script setup lang="ts">
-import { RouterLink } from 'vue-router'
-import { menus, pageConfig } from './config'
-import './index.scss'
-</script>
-
 <template>
   <div class="home-page">
     <img class="home-page__avatar" :src="pageConfig.avatar" alt="头像" />
@@ -42,3 +36,9 @@ import './index.scss'
     <p class="home-page__footer">{{ pageConfig.footer }}</p>
   </div>
 </template>
+
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import { menus, pageConfig } from './config'
+import './index.scss'
+</script>

@@ -122,7 +122,9 @@ $brand: #2a9d8f;
     animation: home-rise 0.65s ease-out both;
     user-select: none;
     -webkit-user-select: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
 
     &:active {
       transform: scale(0.96);

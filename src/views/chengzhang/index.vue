@@ -1,3 +1,63 @@
+<template>
+  <div class="chengzhang-page">
+    <div class="chengzhang-page__topbar">
+      <RouterLink class="chengzhang-page__home" to="/">‹ 返回首页</RouterLink>
+      <div class="chengzhang-page__counter">{{ counterText }}</div>
+    </div>
+
+    <div v-if="!images.length" class="chengzhang-page__empty">
+      <p>还没有成长照片</p>
+      <p>把图片放到 images 文件夹即可</p>
+    </div>
+
+    <div
+      v-else
+      ref="stageRef"
+      class="chengzhang-page__stage"
+      @touchstart.passive="onTouchStart"
+      @touchmove.passive="onTouchMove"
+      @touchend="onTouchEnd"
+    >
+      <div class="chengzhang-page__track" :class="{ dragging }" :style="trackStyle">
+        <div v-for="(src, i) in images" :key="src" class="chengzhang-page__slide">
+          <img
+            v-if="isLoaded(i)"
+            :src="src"
+            :alt="`成长照片 ${i + 1}`"
+            decoding="async"
+            :fetchpriority="i === index ? 'high' : 'low'"
+          />
+          <div v-else class="chengzhang-page__placeholder" aria-hidden="true">加载中</div>
+        </div>
+      </div>
+
+      <button class="chengzhang-page__nav prev" type="button" aria-label="上一张" @click="onPrev">
+        ‹
+      </button>
+      <button class="chengzhang-page__nav next" type="button" aria-label="下一张" @click="onNext">
+        ›
+      </button>
+    </div>
+
+    <div v-if="images.length" class="chengzhang-page__controls">
+      <div class="chengzhang-page__dots">
+        <button
+          v-for="(_, i) in images"
+          :key="i"
+          type="button"
+          class="chengzhang-page__dot"
+          :class="{ active: i === index }"
+          :aria-label="`第 ${i + 1} 张`"
+          @click="onDot(i)"
+        />
+      </div>
+      <button class="chengzhang-page__play" type="button" @click="togglePlay">
+        {{ playing ? '暂停播放' : '自动播放' }}
+      </button>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
@@ -144,63 +204,3 @@ onBeforeUnmount(() => {
   stopAuto()
 })
 </script>
-
-<template>
-  <div class="chengzhang-page">
-    <div class="chengzhang-page__topbar">
-      <RouterLink class="chengzhang-page__home" to="/">‹ 返回首页</RouterLink>
-      <div class="chengzhang-page__counter">{{ counterText }}</div>
-    </div>
-
-    <div v-if="!images.length" class="chengzhang-page__empty">
-      <p>还没有成长照片</p>
-      <p>把图片放到 images 文件夹即可</p>
-    </div>
-
-    <div
-      v-else
-      ref="stageRef"
-      class="chengzhang-page__stage"
-      @touchstart.passive="onTouchStart"
-      @touchmove.passive="onTouchMove"
-      @touchend="onTouchEnd"
-    >
-      <div class="chengzhang-page__track" :class="{ dragging }" :style="trackStyle">
-        <div v-for="(src, i) in images" :key="src" class="chengzhang-page__slide">
-          <img
-            v-if="isLoaded(i)"
-            :src="src"
-            :alt="`成长照片 ${i + 1}`"
-            decoding="async"
-            :fetchpriority="i === index ? 'high' : 'low'"
-          />
-          <div v-else class="chengzhang-page__placeholder" aria-hidden="true">加载中</div>
-        </div>
-      </div>
-
-      <button class="chengzhang-page__nav prev" type="button" aria-label="上一张" @click="onPrev">
-        ‹
-      </button>
-      <button class="chengzhang-page__nav next" type="button" aria-label="下一张" @click="onNext">
-        ›
-      </button>
-    </div>
-
-    <div v-if="images.length" class="chengzhang-page__controls">
-      <div class="chengzhang-page__dots">
-        <button
-          v-for="(_, i) in images"
-          :key="i"
-          type="button"
-          class="chengzhang-page__dot"
-          :class="{ active: i === index }"
-          :aria-label="`第 ${i + 1} 张`"
-          @click="onDot(i)"
-        />
-      </div>
-      <button class="chengzhang-page__play" type="button" @click="togglePlay">
-        {{ playing ? '暂停播放' : '自动播放' }}
-      </button>
-    </div>
-  </div>
-</template>

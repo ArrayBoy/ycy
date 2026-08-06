@@ -1,8 +1,3 @@
-<script setup lang="ts">
-import PlaceholderPage from '@/components/PlaceholderPage.vue'
-import { pageConfig } from './config'
-</script>
-
 <template>
   <PlaceholderPage
     :title="pageConfig.title"
@@ -13,3 +8,8 @@ import { pageConfig } from './config'
     :accent-class="pageConfig.accentClass"
   />
 </template>
+
+<script setup lang="ts">
+import PlaceholderPage from '@/components/PlaceholderPage.vue'
+import { pageConfig } from './config'
+</script>

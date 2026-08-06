@@ -1,18 +1,3 @@
-<script setup lang="ts">
-import type { FushiMode, Recipe } from '../config'
-
-defineProps<{
-  active: boolean
-  mode: FushiMode
-  list: { recipe: Recipe; index: number }[]
-  shortCategory: (name: string) => string
-}>()
-
-defineEmits<{
-  select: [index: number]
-}>()
-</script>
-
 <template>
   <div class="view" :class="{ active }">
     <div v-if="!list.length" class="empty">暂无菜谱</div>
@@ -38,3 +23,18 @@ defineEmits<{
     </button>
   </div>
 </template>
+
+<script setup lang="ts">
+import type { FushiMode, Recipe } from '../config'
+
+defineProps<{
+  active: boolean
+  mode: FushiMode
+  list: { recipe: Recipe; index: number }[]
+  shortCategory: (name: string) => string
+}>()
+
+defineEmits<{
+  select: [index: number]
+}>()
+</script>

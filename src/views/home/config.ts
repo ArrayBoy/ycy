@@ -1,3 +1,5 @@
+import { publicUrl } from '@/utils/publicUrl'
+
 export interface MenuItem {
   key: string
   name: string
@@ -15,7 +17,7 @@ export const pageConfig = {
   brand: '杨宸烨',
   tagline: '宝宝成长站',
   footer: '轻轻点一点，开启今天的陪伴',
-  avatar: '/piblic/tx.jpg',
+  avatar: publicUrl('piblic/tx.jpg'),
 } as const
 
 export const menus: MenuItem[] = [

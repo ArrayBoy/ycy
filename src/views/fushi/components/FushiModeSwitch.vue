@@ -1,16 +1,3 @@
-<script setup lang="ts">
-import type { FushiMode } from '../config'
-
-defineProps<{
-  show: boolean
-  mode: FushiMode
-}>()
-
-defineEmits<{
-  change: [mode: FushiMode]
-}>()
-</script>
-
 <template>
   <div class="mode-switch" :class="{ show }">
     <button
@@ -31,3 +18,16 @@ defineEmits<{
     </button>
   </div>
 </template>
+
+<script setup lang="ts">
+import type { FushiMode } from '../config'
+
+defineProps<{
+  show: boolean
+  mode: FushiMode
+}>()
+
+defineEmits<{
+  change: [mode: FushiMode]
+}>()
+</script>

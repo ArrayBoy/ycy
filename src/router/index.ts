@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import { pageConfig as homeConfig } from '@/views/home/config'
 import { pageConfig as fushiConfig } from '@/views/fushi/config'
 import { pageConfig as chengzhangConfig } from '@/views/chengzhang/config'
@@ -8,7 +8,8 @@ import { pageConfig as gushiConfig } from '@/views/gushi/config'
 import { pageConfig as xuexiConfig } from '@/views/xuexi/config'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  // Hash 路由：纯静态部署可直接打开 index.html，无需服务端回退
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: homeConfig.path,

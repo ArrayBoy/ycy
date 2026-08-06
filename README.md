@@ -20,7 +20,12 @@ pnpm install
 | `pnpm build` | 类型检查 + 打包，产物输出到 `docs/` |
 | `pnpm preview` | 本地预览打包结果 |
 | `pnpm typecheck` | 仅做 TypeScript / Vue 类型检查 |
+| `pnpm lint` | ESLint 检查 |
+| `pnpm lint:fix` | ESLint 自动修复 |
+| `pnpm format` | Prettier 格式化源码 |
 | `pnpm clean` | 清理 `docs` 构建产物 |
+
+编辑器已配置：**保存时自动用 Prettier 格式化**，并用 ESLint 修复可自动修复问题。请安装推荐扩展（ESLint、Prettier、Volar）。
 
 ## 模块约定
 
@@ -36,4 +41,7 @@ pnpm install
 - 辅食：菜谱浏览、采购清单、烹饪技巧（数据来自 `src/views/fushi/fushi.json`）
 - 成长：图片播放器（`public/chengzhang/images`）
 
-构建会生成 gzip（`.gz`），并对图片等静态资源做压缩优化。`docs/` 可提交到仓库。
+构建产物输出到 `docs/`（可提交仓库）。已配置：
+
+- `base: './'`：资源使用相对路径，可直接打开 `docs/index.html`
+- Hash 路由：无需服务端 rewrite，刷新子页面也不丢路由

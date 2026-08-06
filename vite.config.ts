@@ -22,6 +22,7 @@ const DEV_PORT = 5173
 const networkIp = getNetworkIp()
 
 export default defineConfig({
+  base: './',
   plugins: [
     vue(),
     tailwindcss(),

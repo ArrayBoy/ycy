@@ -1,17 +1,3 @@
-<script setup lang="ts">
-import type { Recipe } from '../config'
-
-defineProps<{
-  active: boolean
-  recipe: Recipe | null
-  shortCategory: (name: string) => string
-}>()
-
-function cleanStep(step: string) {
-  return String(step).replace(/^\d+[\.、]\s*/, '')
-}
-</script>
-
 <template>
   <div class="view" :class="{ active }">
     <template v-if="recipe">
@@ -27,11 +13,7 @@ function cleanStep(step: string) {
       <div class="detail-card">
         <div class="section-title">步骤</div>
         <ul class="steps">
-          <li
-            v-for="(step, i) in recipe.steps"
-            :key="i"
-            :data-num="i + 1"
-          >
+          <li v-for="(step, i) in recipe.steps" :key="i" :data-num="i + 1">
             {{ cleanStep(step) }}
           </li>
         </ul>
@@ -43,3 +25,17 @@ function cleanStep(step: string) {
     </template>
   </div>
 </template>
+
+<script setup lang="ts">
+import type { Recipe } from '../config'
+
+defineProps<{
+  active: boolean
+  recipe: Recipe | null
+  shortCategory: (name: string) => string
+}>()
+
+function cleanStep(step: string) {
+  return String(step).replace(/^\d+[\.、]\s*/, '')
+}
+</script>

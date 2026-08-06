@@ -1,3 +1,52 @@
+<template>
+  <div class="fushi-page">
+    <FushiHeader :title="headerTitle" :subtitle="headerSub" :is-home="isHome" @back="goBack" />
+
+    <FushiHomeTools :show="isHome" @shopping="openShopping" @tips="openTips" />
+
+    <FushiModeSwitch :show="isHome" :mode="mode" @change="setMode" />
+
+    <main class="content">
+      <div v-if="loading" class="empty">加载中…</div>
+      <div v-else-if="error" class="empty">{{ error }}</div>
+
+      <template v-else-if="data">
+        <FushiCategoryList
+          :active="view === 'categories'"
+          :mode="mode"
+          :order="grouped.order"
+          :map="grouped.map"
+          :category-number="categoryNumber"
+          :display-group-name="displayGroupName"
+          @select="openGroup"
+        />
+
+        <FushiRecipeList
+          :active="view === 'recipes'"
+          :mode="mode"
+          :list="currentList"
+          :short-category="shortCategory"
+          @select="openRecipe"
+        />
+
+        <FushiRecipeDetail
+          :active="view === 'detail'"
+          :recipe="currentRecipe"
+          :short-category="shortCategory"
+        />
+
+        <FushiShoppingList
+          :active="view === 'shopping'"
+          :list="data.weekly_shopping_list"
+          @home="goHome"
+        />
+
+        <FushiTipsList :active="view === 'tips'" :list="data.tips_and_tricks" @home="goHome" />
+      </template>
+    </main>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useFushi } from './config'
@@ -71,72 +120,6 @@ const headerSub = computed(() => {
 })
 </script>
 
-<template>
-  <div class="fushi-page">
-    <FushiHeader
-      :title="headerTitle"
-      :subtitle="headerSub"
-      :is-home="isHome"
-      @back="goBack"
-    />
-
-    <FushiHomeTools
-      :show="isHome"
-      @shopping="openShopping"
-      @tips="openTips"
-    />
-
-    <FushiModeSwitch
-      :show="isHome"
-      :mode="mode"
-      @change="setMode"
-    />
-
-    <main class="content">
-      <div v-if="loading" class="empty">加载中…</div>
-      <div v-else-if="error" class="empty">{{ error }}</div>
-
-      <template v-else-if="data">
-        <FushiCategoryList
-          :active="view === 'categories'"
-          :mode="mode"
-          :order="grouped.order"
-          :map="grouped.map"
-          :category-number="categoryNumber"
-          :display-group-name="displayGroupName"
-          @select="openGroup"
-        />
-
-        <FushiRecipeList
-          :active="view === 'recipes'"
-          :mode="mode"
-          :list="currentList"
-          :short-category="shortCategory"
-          @select="openRecipe"
-        />
-
-        <FushiRecipeDetail
-          :active="view === 'detail'"
-          :recipe="currentRecipe"
-          :short-category="shortCategory"
-        />
-
-        <FushiShoppingList
-          :active="view === 'shopping'"
-          :list="data.weekly_shopping_list"
-          @home="goHome"
-        />
-
-        <FushiTipsList
-          :active="view === 'tips'"
-          :list="data.tips_and_tricks"
-          @home="goHome"
-        />
-      </template>
-    </main>
-  </div>
-</template>
-
 <style lang="scss">
 $bg: #fff8f1;
 $surface: #ffffff;
@@ -164,7 +147,9 @@ $line: #f0e0d0;
   flex-direction: column;
   position: relative;
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    sans-serif;
   background: $bg;
   color: $text;
   line-height: 1.55;
@@ -579,5 +564,4 @@ $line: #f0e0d0;
     }
   }
 }
-
 </style>
