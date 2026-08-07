@@ -198,7 +198,7 @@ const router = createRouter({
 })
 
 router.afterEach((to) => {
-  const title = (to.meta.title as string) || 'YCY'
+  const title = (to.meta.title as string) || '杨宸烨-宝宝'
   document.title = title
 })
 

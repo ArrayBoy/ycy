@@ -17,18 +17,69 @@ $brand: #2a9d8f;
     radial-gradient(ellipse 100% 70% at 100% 0%, #b8e8f5 0%, transparent 50%),
     linear-gradient(165deg, #9ad4ea 0%, #c5ebe0 42%, #ffe4c8 100%);
 
-  &__avatar {
+  &__avatar-btn {
     position: absolute;
     top: calc(12px + env(safe-area-inset-top));
     left: 16px;
     z-index: 2;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    animation: home-rise 0.6s ease-out both;
+
+    &:active .home-page__avatar {
+      transform: scale(0.96);
+    }
+  }
+
+  &__avatar {
+    display: block;
     width: 52px;
     height: 52px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid rgba(255, 255, 255, 0.95);
     box-shadow: 0 6px 18px rgba(44, 62, 80, 0.18);
-    animation: home-rise 0.6s ease-out both;
+  }
+
+  &__preview {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+    background: rgba(15, 30, 40, 0.72);
+    backdrop-filter: blur(6px);
+  }
+
+  &__preview-img {
+    width: min(86vw, 420px);
+    max-height: min(70vh, 520px);
+    object-fit: contain;
+    border-radius: 18px;
+  }
+
+  &__preview-close {
+    min-width: 88px;
+    height: 40px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.95);
+    color: $ink;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+
+    &:active {
+      transform: scale(0.97);
+    }
   }
 
   &__age {

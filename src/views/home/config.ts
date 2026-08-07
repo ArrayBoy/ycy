@@ -13,7 +13,7 @@ export interface MenuItem {
 
 export const pageConfig = {
   name: 'home',
-  title: 'YCY · 宝宝成长站',
+  title: '杨宸烨-宝宝',
   path: '/',
   brand: '杨宸烨',
   tagline: '宝宝成长站',
