@@ -1,6 +1,14 @@
 <template>
-  <div>
+  <div class="recipe-detail" :style="{ '--detail-fs': `${fontSize}px` }">
     <template v-if="recipe">
+      <div class="font-toolbar">
+        <button class="font-btn" type="button" @click="enlargeFont">放大字体</button>
+        <button class="font-btn" type="button" :disabled="isDefaultFont" @click="resetFont">
+          还原默认
+        </button>
+        <span class="font-size-hint">{{ fontSize }}px</span>
+      </div>
+
       <div class="detail-card">
         <div class="detail-name">{{ recipe.name }}</div>
         <div class="detail-tags">
@@ -28,20 +36,40 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import {
+  DETAIL_FONT_DEFAULT,
+  DETAIL_FONT_MAX,
   cleanStep,
   fushiData,
   getCategoryLabel,
   getDishTypeLabel,
+  readDetailFontSize,
+  saveDetailFontSize,
 } from '../config'
 
 const route = useRoute()
+const fontSize = ref(readDetailFontSize())
+
+const isDefaultFont = computed(() => fontSize.value === DETAIL_FONT_DEFAULT)
 
 const recipe = computed(() => {
-  const index = Number(Array.isArray(route.params.index) ? route.params.index[0] : route.params.index)
+  const index = Number(
+    Array.isArray(route.params.index) ? route.params.index[0] : route.params.index,
+  )
   if (!Number.isInteger(index) || index < 0) return null
   return fushiData.recipes[index] ?? null
 })
+
+function enlargeFont() {
+  if (fontSize.value >= DETAIL_FONT_MAX) return
+  fontSize.value += 1
+  saveDetailFontSize(fontSize.value)
+}
+
+function resetFont() {
+  fontSize.value = DETAIL_FONT_DEFAULT
+  saveDetailFontSize(fontSize.value)
+}
 </script>

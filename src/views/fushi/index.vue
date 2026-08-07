@@ -519,8 +519,47 @@ $line: #f0e0d0;
     margin-bottom: 12px;
   }
 
+  .recipe-detail {
+    --detail-fs: 14px;
+  }
+
+  .font-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .font-btn {
+    border: 1px solid $line;
+    background: $surface;
+    color: $text;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(59, 36, 21, 0.04);
+
+    &:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+  }
+
+  .font-size-hint {
+    margin-left: auto;
+    font-size: 12px;
+    color: $muted;
+    font-weight: 600;
+  }
+
   .detail-name {
-    font-size: 20px;
+    font-size: calc(var(--detail-fs) + 6px);
     font-weight: 700;
     line-height: 1.35;
     margin-bottom: 8px;
@@ -535,7 +574,7 @@ $line: #f0e0d0;
 
   .detail-cat {
     display: inline-block;
-    font-size: 12px;
+    font-size: calc(var(--detail-fs) - 2px);
     color: $accent;
     background: $accent-soft;
     padding: 4px 10px;
@@ -543,7 +582,7 @@ $line: #f0e0d0;
   }
 
   .section-title {
-    font-size: 14px;
+    font-size: var(--detail-fs);
     font-weight: 700;
     color: $accent;
     margin-bottom: 8px;
@@ -561,7 +600,7 @@ $line: #f0e0d0;
   }
 
   .ingredients {
-    font-size: 14px;
+    font-size: var(--detail-fs);
     color: $text;
     background: $bg;
     border-radius: 12px;
@@ -575,7 +614,7 @@ $line: #f0e0d0;
     li {
       position: relative;
       padding: 10px 10px 10px 42px;
-      font-size: 14px;
+      font-size: var(--detail-fs);
       border-bottom: 1px dashed $line;
 
       &:last-child {
@@ -592,7 +631,7 @@ $line: #f0e0d0;
         border-radius: 50%;
         background: $accent-soft;
         color: $accent;
-        font-size: 12px;
+        font-size: calc(var(--detail-fs) - 2px);
         font-weight: 700;
         display: flex;
         align-items: center;
@@ -602,7 +641,7 @@ $line: #f0e0d0;
   }
 
   .tips {
-    font-size: 14px;
+    font-size: var(--detail-fs);
     color: #8a5a2b;
     background: #fff6e8;
     border-radius: 12px;

@@ -126,3 +126,29 @@ export function getRecipesByGroup(mode: FushiMode, type: number | string) {
 export function cleanStep(step: string) {
   return String(step).replace(/^\d+[\.、]\s*/, '')
 }
+
+export const DETAIL_FONT_STORAGE_KEY = 'fushi-detail-font-size'
+export const DETAIL_FONT_DEFAULT = 14
+export const DETAIL_FONT_MAX = 28
+
+export function readDetailFontSize() {
+  try {
+    const raw = localStorage.getItem(DETAIL_FONT_STORAGE_KEY)
+    const num = Number(raw)
+    if (Number.isFinite(num) && num >= DETAIL_FONT_DEFAULT && num <= DETAIL_FONT_MAX) {
+      return Math.round(num)
+    }
+  } catch {
+    // ignore
+  }
+  return DETAIL_FONT_DEFAULT
+}
+
+export function saveDetailFontSize(size: number) {
+  try {
+    localStorage.setItem(DETAIL_FONT_STORAGE_KEY, String(size))
+  } catch {
+    // ignore
+  }
+}
+
