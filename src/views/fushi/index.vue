@@ -1,122 +1,207 @@
 <template>
   <div class="fushi-page">
-    <FushiHeader :title="headerTitle" :subtitle="headerSub" :is-home="isHome" @back="goBack" />
+    <header class="header">
+      <button
+        class="back-btn"
+        :class="{ show: !isHome }"
+        type="button"
+        aria-label="返回"
+        @click="goBack"
+      >
+        ‹
+      </button>
+      <div class="header-text">
+        <div class="header-title">{{ headerTitle }}</div>
+        <div class="header-sub">{{ headerSub }}</div>
+      </div>
+      <div class="header-actions">
+        <div ref="helpWrapRef" class="help-wrap">
+          <button
+            class="help-btn"
+            type="button"
+            aria-label="帮助"
+            aria-haspopup="menu"
+            :aria-expanded="menuOpen"
+            @click="toggleMenu"
+          >
+            ?
+          </button>
+          <div v-show="menuOpen" class="help-menu" role="menu">
+            <button class="help-item" type="button" role="menuitem" @click="goShopping">
+              周采购清单
+            </button>
+            <button class="help-item" type="button" role="menuitem" @click="goTips">
+              烹饪小技巧
+            </button>
+          </div>
+        </div>
+        <RouterLink class="site-home-link" :class="{ show: isHome }" to="/">返回首页</RouterLink>
+      </div>
+    </header>
 
-    <FushiHomeTools :show="isHome" @shopping="openShopping" @tips="openTips" />
-
-    <FushiModeSwitch :show="isHome" :mode="mode" @change="setMode" />
+    <div v-if="isHome" class="mode-switch show">
+      <button
+        class="mode-btn"
+        :class="{ active: mode === 'category' }"
+        type="button"
+        @click="setMode('category')"
+      >
+        按食材大类
+      </button>
+      <button
+        class="mode-btn"
+        :class="{ active: mode === 'dishType' }"
+        type="button"
+        @click="setMode('dishType')"
+      >
+        按菜式类型
+      </button>
+    </div>
 
     <main class="content">
-      <div v-if="loading" class="empty">加载中…</div>
-      <div v-else-if="error" class="empty">{{ error }}</div>
-
-      <template v-else-if="data">
-        <FushiCategoryList
-          :active="view === 'categories'"
-          :mode="mode"
-          :order="grouped.order"
-          :map="grouped.map"
-          :category-number="categoryNumber"
-          :display-group-name="displayGroupName"
-          @select="openGroup"
-        />
-
-        <FushiRecipeList
-          :active="view === 'recipes'"
-          :mode="mode"
-          :list="currentList"
-          :short-category="shortCategory"
-          @select="openRecipe"
-        />
-
-        <FushiRecipeDetail
-          :active="view === 'detail'"
-          :recipe="currentRecipe"
-          :short-category="shortCategory"
-        />
-
-        <FushiShoppingList
-          :active="view === 'shopping'"
-          :list="data.weekly_shopping_list"
-          @home="goHome"
-        />
-
-        <FushiTipsList :active="view === 'tips'" :list="data.tips_and_tricks" @home="goHome" />
-      </template>
+      <RouterView />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useFushi } from './config'
-import FushiHeader from './components/FushiHeader.vue'
-import FushiHomeTools from './components/FushiHomeTools.vue'
-import FushiModeSwitch from './components/FushiModeSwitch.vue'
-import FushiCategoryList from './components/FushiCategoryList.vue'
-import FushiRecipeList from './components/FushiRecipeList.vue'
-import FushiRecipeDetail from './components/FushiRecipeDetail.vue'
-import FushiShoppingList from './components/FushiShoppingList.vue'
-import FushiTipsList from './components/FushiTipsList.vue'
-
-const {
-  data,
-  loading,
-  error,
-  view,
-  mode,
-  groupKey,
-  recipeIndex,
-  recipes,
-  title,
-  isHome,
-  shortCategory,
-  categoryNumber,
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+import {
   displayGroupName,
-  groupRecipes,
-  setMode,
-  openGroup,
-  openRecipe,
-  openShopping,
-  openTips,
-  goHome,
-  goBack,
-} = useFushi()
+  fushiData,
+  getRecipesByGroup,
+  isFushiMode,
+  parseFushiMode,
+  parseRouteParam,
+  type FushiMode,
+} from './config'
 
-const grouped = computed(() => groupRecipes(mode.value))
-const currentList = computed(() => {
-  if (!groupKey.value) return []
-  return grouped.value.map[groupKey.value] || []
+const route = useRoute()
+const router = useRouter()
+
+const menuOpen = ref(false)
+const helpWrapRef = ref<HTMLElement | null>(null)
+
+const isHome = computed(() => route.name === 'fushi')
+
+const mode = computed<FushiMode>(() => {
+  if (route.params.mode != null && route.params.mode !== '') {
+    return parseFushiMode(route.params.mode)
+  }
+  return parseFushiMode(route.query.mode)
 })
+
+const groupType = computed(() => {
+  const fromParams = parseRouteParam(route.params.type)
+  if (fromParams) return fromParams
+  return parseRouteParam(route.query.type)
+})
+
+const currentList = computed(() => {
+  if (!groupType.value) return []
+  return getRecipesByGroup(mode.value, groupType.value)
+})
+
 const currentRecipe = computed(() => {
-  if (recipeIndex.value === null) return null
-  return recipes.value[recipeIndex.value] || null
+  const index = Number(parseRouteParam(route.params.index))
+  if (!Number.isInteger(index) || index < 0) return null
+  return fushiData.recipes[index] ?? null
 })
 
 const headerTitle = computed(() => {
-  if (view.value === 'categories') return title.value
-  if (view.value === 'recipes') return displayGroupName(groupKey.value || '')
-  if (view.value === 'detail') return '菜谱详情'
-  if (view.value === 'shopping') return '周采购清单'
-  if (view.value === 'tips') return '烹饪小技巧'
-  return title.value
+  if (route.name === 'fushi') return fushiData.title
+  if (route.name === 'fushi-list') return displayGroupName(mode.value, groupType.value)
+  if (route.name === 'fushi-detail') return '菜谱详情'
+  if (route.name === 'fushi-shopping') return '周采购清单'
+  if (route.name === 'fushi-tips') return '烹饪小技巧'
+  return fushiData.title
 })
 
 const headerSub = computed(() => {
-  if (view.value === 'categories') {
-    return `共 ${recipes.value.length} 道 · ${mode.value === 'category' ? '按食材大类浏览' : '按菜式类型浏览'}`
+  if (route.name === 'fushi') {
+    return `共 ${fushiData.recipes.length} 道 · ${mode.value === 'category' ? '按食材大类浏览' : '按菜式类型浏览'}`
   }
-  if (view.value === 'recipes') return `${currentList.value.length} 道菜谱`
-  if (view.value === 'detail' && currentRecipe.value) {
-    return displayGroupName(groupKey.value || currentRecipe.value.category)
+  if (route.name === 'fushi-list') return `${currentList.value.length} 道菜谱`
+  if (route.name === 'fushi-detail' && currentRecipe.value) {
+    return displayGroupName(
+      mode.value,
+      groupType.value ||
+        (mode.value === 'dishType'
+          ? currentRecipe.value.dishType
+          : currentRecipe.value.categoryType),
+    )
   }
-  if (view.value === 'shopping') {
-    return `共 ${data.value?.weekly_shopping_list?.length || 0} 类食材建议`
+  if (route.name === 'fushi-shopping') {
+    return `共 ${fushiData.weekly_shopping_list.length} 类食材建议`
   }
-  if (view.value === 'tips') {
-    return `共 ${data.value?.tips_and_tricks?.length || 0} 条实用建议`
+  if (route.name === 'fushi-tips') {
+    return `共 ${fushiData.tips_and_tricks.length} 条实用建议`
   }
   return ''
+})
+
+function setMode(next: FushiMode) {
+  router.replace({
+    name: 'fushi',
+    query: next === 'category' ? {} : { mode: next },
+  })
+}
+
+function goBack() {
+  if (route.name === 'fushi-detail') {
+    if (isFushiMode(route.query.mode) && route.query.type != null) {
+      router.push({
+        name: 'fushi-list',
+        params: { mode: route.query.mode, type: String(route.query.type) },
+      })
+      return
+    }
+  }
+  if (route.name === 'fushi-list') {
+    router.push({
+      name: 'fushi',
+      query: mode.value === 'category' ? {} : { mode: mode.value },
+    })
+    return
+  }
+  if (route.name === 'fushi-shopping' || route.name === 'fushi-tips') {
+    router.push({ name: 'fushi' })
+    return
+  }
+  router.push({ name: 'fushi' })
+}
+
+function toggleMenu() {
+  menuOpen.value = !menuOpen.value
+}
+
+function closeMenu() {
+  menuOpen.value = false
+}
+
+function goShopping() {
+  closeMenu()
+  router.push({ name: 'fushi-shopping' })
+}
+
+function goTips() {
+  closeMenu()
+  router.push({ name: 'fushi-tips' })
+}
+
+function onDocPointerDown(e: Event) {
+  const el = helpWrapRef.value
+  if (!el || !menuOpen.value) return
+  if (!el.contains(e.target as Node)) closeMenu()
+}
+
+onMounted(() => {
+  document.addEventListener('pointerdown', onDocPointerDown)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', onDocPointerDown)
 })
 </script>
 
@@ -220,6 +305,70 @@ $line: #f0e0d0;
     }
   }
 
+  .header-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .help-wrap {
+    position: relative;
+  }
+
+  .help-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: $surface;
+    color: $accent;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(232, 121, 47, 0.15);
+    cursor: pointer;
+
+    &:active {
+      transform: scale(0.96);
+    }
+  }
+
+  .help-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 148px;
+    padding: 6px;
+    border-radius: 12px;
+    background: $surface;
+    border: 1px solid $line;
+    box-shadow: 0 10px 28px rgba(59, 36, 21, 0.12);
+    z-index: 20;
+  }
+
+  .help-item {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: $text;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover,
+    &:active {
+      background: $accent-soft;
+      color: $accent;
+    }
+  }
+
   .header-text {
     min-width: 0;
     flex: 1;
@@ -274,14 +423,6 @@ $line: #f0e0d0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding: 12px 16px calc(20px + var(--safe-bottom));
-  }
-
-  .view {
-    display: none;
-
-    &.active {
-      display: block;
-    }
   }
 
   .cat-item,
@@ -475,43 +616,6 @@ $line: #f0e0d0;
     color: $muted;
     padding: 40px 16px;
     font-size: 14px;
-  }
-
-  .home-tools {
-    flex-shrink: 0;
-    display: none;
-    padding: 10px 16px 0;
-    gap: 8px;
-
-    &.show {
-      display: flex;
-    }
-  }
-
-  .tool-btn {
-    flex: 1;
-    border: 1px solid $line;
-    background: $surface;
-    color: $text;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 8px 6px;
-    border-radius: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    box-shadow: 0 2px 8px rgba(59, 36, 21, 0.04);
-
-    &:active {
-      transform: scale(0.98);
-    }
-
-    span.icon {
-      font-size: 14px;
-      line-height: 1;
-    }
   }
 
   .info-card {

@@ -19,9 +19,40 @@ const router = createRouter({
     },
     {
       path: fushiConfig.path,
-      name: fushiConfig.name,
       component: () => import('@/views/fushi/index.vue'),
       meta: { title: fushiConfig.title },
+      children: [
+        {
+          path: '',
+          name: fushiConfig.name,
+          component: () => import('@/views/fushi/components/CategoryList.vue'),
+          meta: { title: fushiConfig.title },
+        },
+        {
+          path: 'list/:mode/:type',
+          name: 'fushi-list',
+          component: () => import('@/views/fushi/components/RecipeList.vue'),
+          meta: { title: '菜谱列表' },
+        },
+        {
+          path: 'detail/:index',
+          name: 'fushi-detail',
+          component: () => import('@/views/fushi/components/RecipeDetail.vue'),
+          meta: { title: '菜谱详情' },
+        },
+        {
+          path: 'shopping',
+          name: 'fushi-shopping',
+          component: () => import('@/views/fushi/components/Shopping.vue'),
+          meta: { title: '周采购清单' },
+        },
+        {
+          path: 'tips',
+          name: 'fushi-tips',
+          component: () => import('@/views/fushi/components/Tips.vue'),
+          meta: { title: '烹饪小技巧' },
+        },
+      ],
     },
     {
       path: chengzhangConfig.path,

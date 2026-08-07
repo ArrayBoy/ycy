@@ -1,4 +1,3 @@
-import { computed, ref } from 'vue'
 import fushiJson from './fushi.json'
 
 export const pageConfig = {
@@ -7,9 +6,19 @@ export const pageConfig = {
   path: '/fushi',
 } as const
 
+export interface CategoryItem {
+  label: string
+  type: number
+}
+
+export interface DishTypeItem {
+  label: string
+  type: number
+}
+
 export interface Recipe {
-  category: string
-  dishType: string
+  categoryType: number
+  dishType: number
   name: string
   ingredients: string
   steps: string[]
@@ -29,144 +38,91 @@ export interface TipItem {
 
 export interface FushiData {
   title: string
+  categorys: CategoryItem[]
+  dishTypes: DishTypeItem[]
   recipes: Recipe[]
   weekly_shopping_list: ShoppingItem[]
   tips_and_tricks: TipItem[]
 }
 
-export type FushiViewName = 'categories' | 'recipes' | 'detail' | 'shopping' | 'tips'
 export type FushiMode = 'category' | 'dishType'
 
-const DISH_TYPE_ORDER = ['米饭', '面类', '汤粥', '饼', '蒸糕', '手指食物'] as const
-
-export const DISH_TYPE_ICON: Record<string, string> = {
-  米饭: '🍚',
-  面类: '🍜',
-  汤粥: '🥣',
-  饼: '🥞',
-  蒸糕: '🧁',
-  手指食物: '✋',
+/** icon 按 dishTypes.type 映射 */
+export const DISH_TYPE_ICON: Record<number, string> = {
+  1: '🍚',
+  2: '🍜',
+  3: '🥣',
+  4: '🥞',
+  5: '🧁',
+  6: '✋',
 }
 
-export function useFushi() {
-  const data = ref<FushiData | null>(fushiJson as FushiData)
-  const loading = ref(false)
-  const error = ref('')
-  const view = ref<FushiViewName>('categories')
-  const mode = ref<FushiMode>('category')
-  const groupKey = ref<string | null>(null)
-  const recipeIndex = ref<number | null>(null)
+const CN_NUMBERS = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二']
 
-  const recipes = computed(() => data.value?.recipes ?? [])
-  const title = computed(() => data.value?.title ?? pageConfig.title)
-  const isHome = computed(() => view.value === 'categories')
+export const fushiData = fushiJson as FushiData
 
-  function shortCategory(name: string) {
-    return String(name).replace(/^[一二三四五六七八九十]+、/, '')
-  }
+const categoryMap = new Map(fushiData.categorys.map((item) => [item.type, item]))
+const dishTypeMap = new Map(fushiData.dishTypes.map((item) => [item.type, item]))
 
-  function categoryNumber(name: string) {
-    const m = String(name).match(/^([一二三四五六七八九十]+)、/)
-    return m ? m[1] : '·'
-  }
+export function getCategoryLabel(type: number | string) {
+  const num = Number(type)
+  return categoryMap.get(num)?.label ?? String(type)
+}
 
-  function displayGroupName(key: string) {
-    if (mode.value === 'dishType') return key
-    return shortCategory(key)
-  }
+export function getDishTypeLabel(type: number | string) {
+  const num = Number(type)
+  return dishTypeMap.get(num)?.label ?? String(type)
+}
 
-  function groupRecipes(currentMode: FushiMode) {
-    const map: Record<string, { recipe: Recipe; index: number }[]> = {}
-    let order: string[] = []
+export function categoryNumber(type: number | string) {
+  const num = Number(type)
+  if (!Number.isFinite(num) || num < 1) return '·'
+  return CN_NUMBERS[num - 1] ?? String(num)
+}
 
-    if (currentMode === 'dishType') {
-      DISH_TYPE_ORDER.forEach((t) => {
-        map[t] = []
-        order.push(t)
-      })
-    }
+export function displayGroupName(mode: FushiMode, type: number | string) {
+  return mode === 'dishType' ? getDishTypeLabel(type) : getCategoryLabel(type)
+}
 
-    recipes.value.forEach((recipe, index) => {
-      const key = currentMode === 'dishType' ? recipe.dishType : recipe.category
-      if (!map[key]) {
-        map[key] = []
-        order.push(key)
-      }
-      map[key].push({ recipe, index })
-    })
+export function isFushiMode(value: unknown): value is FushiMode {
+  return value === 'category' || value === 'dishType'
+}
 
-    if (currentMode === 'dishType') {
-      order = DISH_TYPE_ORDER.filter((t) => map[t] && map[t].length)
-    }
+export function parseFushiMode(value: unknown): FushiMode {
+  const raw = Array.isArray(value) ? value[0] : value
+  return isFushiMode(raw) ? raw : 'category'
+}
 
-    return { map, order }
-  }
+export function parseRouteParam(value: unknown): string {
+  if (Array.isArray(value)) return String(value[0] ?? '')
+  return value == null ? '' : String(value)
+}
 
-  function setMode(next: FushiMode) {
-    mode.value = next
-    view.value = 'categories'
-    groupKey.value = null
-    recipeIndex.value = null
-  }
+export function groupRecipes(mode: FushiMode) {
+  const map: Record<string, { recipe: Recipe; index: number }[]> = {}
+  const source = mode === 'dishType' ? fushiData.dishTypes : fushiData.categorys
 
-  function openGroup(key: string) {
-    groupKey.value = key
-    view.value = 'recipes'
-    recipeIndex.value = null
-  }
+  source.forEach((item) => {
+    map[String(item.type)] = []
+  })
 
-  function openRecipe(index: number) {
-    recipeIndex.value = index
-    view.value = 'detail'
-  }
+  fushiData.recipes.forEach((recipe, index) => {
+    const key = String(mode === 'dishType' ? recipe.dishType : recipe.categoryType)
+    if (!map[key]) map[key] = []
+    map[key].push({ recipe, index })
+  })
 
-  function openShopping() {
-    view.value = 'shopping'
-  }
+  const order = source
+    .map((item) => String(item.type))
+    .filter((key) => map[key]?.length)
 
-  function openTips() {
-    view.value = 'tips'
-  }
+  return { map, order }
+}
 
-  function goHome() {
-    view.value = 'categories'
-    groupKey.value = null
-    recipeIndex.value = null
-  }
+export function getRecipesByGroup(mode: FushiMode, type: number | string) {
+  return groupRecipes(mode).map[String(type)] ?? []
+}
 
-  function goBack() {
-    if (view.value === 'detail') {
-      view.value = 'recipes'
-      recipeIndex.value = null
-    } else if (view.value === 'recipes') {
-      goHome()
-    } else if (view.value === 'shopping' || view.value === 'tips') {
-      goHome()
-    }
-  }
-
-  return {
-    data,
-    loading,
-    error,
-    view,
-    mode,
-    groupKey,
-    recipeIndex,
-    recipes,
-    title,
-    isHome,
-    DISH_TYPE_ICON,
-    shortCategory,
-    categoryNumber,
-    displayGroupName,
-    groupRecipes,
-    setMode,
-    openGroup,
-    openRecipe,
-    openShopping,
-    openTips,
-    goHome,
-    goBack,
-  }
+export function cleanStep(step: string) {
+  return String(step).replace(/^\d+[\.、]\s*/, '')
 }

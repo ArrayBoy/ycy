@@ -1,5 +1,5 @@
 <template>
-  <div class="view" :class="{ active }">
+  <div>
     <div v-for="item in list" :key="item.category" class="info-card">
       <div class="info-card-title">{{ item.category }}</div>
       <div class="info-card-body">{{ item.ingredients }}</div>
@@ -9,20 +9,19 @@
     </div>
     <div v-if="!list.length" class="empty">暂无清单</div>
     <div class="home-back-bar">
-      <button class="home-back-btn" type="button" @click="$emit('home')">返回辅食列表</button>
+      <button class="home-back-btn" type="button" @click="goHome">返回辅食列表</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ShoppingItem } from '../config'
+import { useRouter } from 'vue-router'
+import { fushiData } from '../config'
 
-defineProps<{
-  active: boolean
-  list: ShoppingItem[]
-}>()
+const list = fushiData.weekly_shopping_list
+const router = useRouter()
 
-defineEmits<{
-  home: []
-}>()
+function goHome() {
+  router.push({ name: 'fushi' })
+}
 </script>
