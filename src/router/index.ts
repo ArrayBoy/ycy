@@ -6,6 +6,7 @@ import { pageConfig as donghuaConfig } from '@/views/donghua/config'
 import { pageConfig as ergeConfig } from '@/views/erge/config'
 import { pageConfig as gushiConfig } from '@/views/gushi/config'
 import { pageConfig as xuexiConfig } from '@/views/xuexi/config'
+import HomePage from '@/views/home/index.vue'
 
 const router = createRouter({
   // Hash 路由：纯静态部署可直接打开 index.html，无需服务端回退
@@ -15,7 +16,7 @@ const router = createRouter({
     {
       path: homeConfig.path,
       name: homeConfig.name,
-      component: () => import('@/views/home/index.vue'),
+      component: HomePage,
       meta: { title: homeConfig.title },
     },
     {

@@ -18,7 +18,7 @@ export const pageConfig = {
   brand: '杨宸烨',
   tagline: '宝宝成长站',
   footer: '轻轻点一点，开启今天的陪伴',
-  avatar: publicUrl('piblic/tx.jpg'),
+  avatar: publicUrl('piblic/ycy.jpg'),
   /** 宝宝生日 YYYY-MM-DD */
   birthday: '2024-11-19',
 } as const
