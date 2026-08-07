@@ -80,9 +80,22 @@ const router = createRouter({
     },
     {
       path: gushiConfig.path,
-      name: gushiConfig.name,
       component: () => import('@/views/gushi/index.vue'),
       meta: { title: gushiConfig.title },
+      children: [
+        {
+          path: '',
+          name: gushiConfig.name,
+          component: () => import('@/views/gushi/components/StoryList.vue'),
+          meta: { title: gushiConfig.title },
+        },
+        {
+          path: 'detail/:id',
+          name: 'gushi-detail',
+          component: () => import('@/views/gushi/components/StoryDetail.vue'),
+          meta: { title: '故事详情' },
+        },
+      ],
     },
     {
       path: xuexiConfig.path,
