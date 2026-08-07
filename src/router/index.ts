@@ -52,6 +52,12 @@ const router = createRouter({
           component: () => import('@/views/fushi/components/Tips.vue'),
           meta: { title: '烹饪小技巧' },
         },
+        {
+          path: 'favorites',
+          name: 'fushi-favorites',
+          component: () => import('@/views/fushi/components/Favorites.vue'),
+          meta: { title: '我的收藏' },
+        },
       ],
     },
     {

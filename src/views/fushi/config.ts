@@ -152,3 +152,50 @@ export function saveDetailFontSize(size: number) {
   }
 }
 
+export const FAVORITES_STORAGE_KEY = 'fushi-favorites'
+
+export function readFavoriteIndexes(): number[] {
+  try {
+    const raw = localStorage.getItem(FAVORITES_STORAGE_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return []
+    return parsed
+      .map((item) => Number(item))
+      .filter((index) => Number.isInteger(index) && index >= 0 && index < fushiData.recipes.length)
+  } catch {
+    return []
+  }
+}
+
+export function saveFavoriteIndexes(indexes: number[]) {
+  try {
+    localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(indexes))
+  } catch {
+    // ignore
+  }
+}
+
+export function isFavorite(index: number) {
+  return readFavoriteIndexes().includes(index)
+}
+
+export function toggleFavorite(index: number) {
+  const list = readFavoriteIndexes()
+  const pos = list.indexOf(index)
+  if (pos >= 0) list.splice(pos, 1)
+  else list.unshift(index)
+  saveFavoriteIndexes(list)
+  return list.includes(index)
+}
+
+export function getFavoriteRecipes() {
+  return readFavoriteIndexes()
+    .map((index) => {
+      const recipe = fushiData.recipes[index]
+      return recipe ? { recipe, index } : null
+    })
+    .filter((item): item is { recipe: Recipe; index: number } => item != null)
+}
+
+

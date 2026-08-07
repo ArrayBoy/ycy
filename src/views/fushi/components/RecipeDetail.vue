@@ -10,7 +10,22 @@
       </div>
 
       <div class="detail-card">
-        <div class="detail-name">{{ recipe.name }}</div>
+        <div class="detail-name-row">
+          <div class="detail-name">{{ recipe.name }}</div>
+          <button
+            class="fav-btn"
+            type="button"
+            :class="{ active: favorited }"
+            :aria-label="favorited ? '取消收藏' : '收藏'"
+            @click="onToggleFavorite"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 17.3l-5.4 3.2 1.4-6.1L3.5 9.9l6.2-.5L12 3.5l2.3 5.9 6.2.5-4.5 4.5 1.4 6.1z"
+              />
+            </svg>
+          </button>
+        </div>
         <div class="detail-tags">
           <span class="detail-cat">{{ getCategoryLabel(recipe.categoryType) }}</span>
           <span class="detail-cat">{{ getDishTypeLabel(recipe.dishType) }}</span>
@@ -32,11 +47,12 @@
       </div>
     </template>
     <div v-else class="empty">未找到该菜谱</div>
+    <div v-if="toastVisible" class="fushi-toast">{{ toastText }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import {
   DETAIL_FONT_DEFAULT,
@@ -45,22 +61,40 @@ import {
   fushiData,
   getCategoryLabel,
   getDishTypeLabel,
+  isFavorite,
   readDetailFontSize,
   saveDetailFontSize,
+  toggleFavorite,
 } from '../config'
 
 const route = useRoute()
 const fontSize = ref(readDetailFontSize())
+const favorited = ref(false)
+const toastVisible = ref(false)
+const toastText = ref('')
+let toastTimer: ReturnType<typeof setTimeout> | null = null
 
 const isDefaultFont = computed(() => fontSize.value === DETAIL_FONT_DEFAULT)
 
-const recipe = computed(() => {
+const recipeIndex = computed(() => {
   const index = Number(
     Array.isArray(route.params.index) ? route.params.index[0] : route.params.index,
   )
-  if (!Number.isInteger(index) || index < 0) return null
-  return fushiData.recipes[index] ?? null
+  return Number.isInteger(index) && index >= 0 ? index : null
 })
+
+const recipe = computed(() => {
+  if (recipeIndex.value === null) return null
+  return fushiData.recipes[recipeIndex.value] ?? null
+})
+
+watch(
+  recipeIndex,
+  (index) => {
+    favorited.value = index !== null && isFavorite(index)
+  },
+  { immediate: true },
+)
 
 function enlargeFont() {
   if (fontSize.value >= DETAIL_FONT_MAX) return
@@ -72,4 +106,24 @@ function resetFont() {
   fontSize.value = DETAIL_FONT_DEFAULT
   saveDetailFontSize(fontSize.value)
 }
+
+function showToast(text: string) {
+  toastText.value = text
+  toastVisible.value = true
+  if (toastTimer) clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => {
+    toastVisible.value = false
+    toastTimer = null
+  }, 1600)
+}
+
+function onToggleFavorite() {
+  if (recipeIndex.value === null) return
+  favorited.value = toggleFavorite(recipeIndex.value)
+  showToast(favorited.value ? '收藏成功' : '取消收藏成功')
+}
+
+onBeforeUnmount(() => {
+  if (toastTimer) clearTimeout(toastTimer)
+})
 </script>

@@ -33,6 +33,9 @@
             <button class="help-item" type="button" role="menuitem" @click="goTips">
               烹饪小技巧
             </button>
+            <button class="help-item" type="button" role="menuitem" @click="goFavorites">
+              我的收藏
+            </button>
           </div>
         </div>
         <RouterLink class="site-home-link" :class="{ show: isHome }" to="/">返回首页</RouterLink>
@@ -70,6 +73,7 @@ import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import {
   displayGroupName,
   fushiData,
+  getFavoriteRecipes,
   getRecipesByGroup,
   isFushiMode,
   parseFushiMode,
@@ -115,6 +119,7 @@ const headerTitle = computed(() => {
   if (route.name === 'fushi-detail') return '菜谱详情'
   if (route.name === 'fushi-shopping') return '周采购清单'
   if (route.name === 'fushi-tips') return '烹饪小技巧'
+  if (route.name === 'fushi-favorites') return '我的收藏'
   return fushiData.title
 })
 
@@ -138,6 +143,9 @@ const headerSub = computed(() => {
   if (route.name === 'fushi-tips') {
     return `共 ${fushiData.tips_and_tricks.length} 条实用建议`
   }
+  if (route.name === 'fushi-favorites') {
+    return `共 ${getFavoriteRecipes().length} 道收藏`
+  }
   return ''
 })
 
@@ -150,6 +158,10 @@ function setMode(next: FushiMode) {
 
 function goBack() {
   if (route.name === 'fushi-detail') {
+    if (route.query.from === 'favorites') {
+      router.push({ name: 'fushi-favorites' })
+      return
+    }
     if (isFushiMode(route.query.mode) && route.query.type != null) {
       router.push({
         name: 'fushi-list',
@@ -165,7 +177,11 @@ function goBack() {
     })
     return
   }
-  if (route.name === 'fushi-shopping' || route.name === 'fushi-tips') {
+  if (
+    route.name === 'fushi-shopping' ||
+    route.name === 'fushi-tips' ||
+    route.name === 'fushi-favorites'
+  ) {
     router.push({ name: 'fushi' })
     return
   }
@@ -188,6 +204,11 @@ function goShopping() {
 function goTips() {
   closeMenu()
   router.push({ name: 'fushi-tips' })
+}
+
+function goFavorites() {
+  closeMenu()
+  router.push({ name: 'fushi-favorites' })
 }
 
 function onDocPointerDown(e: Event) {
@@ -558,11 +579,76 @@ $line: #f0e0d0;
     font-weight: 600;
   }
 
+  .detail-name-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
   .detail-name {
+    flex: 1;
+    min-width: 0;
     font-size: calc(var(--detail-fs) + 6px);
     font-weight: 700;
     line-height: 1.35;
-    margin-bottom: 8px;
+  }
+
+  .fav-btn {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    margin-top: 2px;
+    border: none;
+    border-radius: 50%;
+    background: $accent-soft;
+    color: $accent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linejoin: round;
+    }
+
+    &.active {
+      background: $accent;
+      color: #fff;
+
+      svg {
+        fill: currentColor;
+        stroke: currentColor;
+      }
+    }
+
+    &:active {
+      transform: scale(0.94);
+    }
+  }
+
+  .fushi-toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(28px + var(--safe-bottom));
+    transform: translateX(-50%);
+    z-index: 50;
+    max-width: calc(100% - 48px);
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(59, 36, 21, 0.88);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 8px 20px rgba(59, 36, 21, 0.18);
   }
 
   .detail-tags {
