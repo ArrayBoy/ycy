@@ -19,12 +19,13 @@
     </header>
 
     <nav class="home-page__menu" aria-label="功能菜单">
-      <RouterLink
+      <button
         v-for="(item, i) in menus"
         :key="item.key"
-        :to="item.to"
         class="home-page__card"
+        type="button"
         :style="{ animationDelay: `${0.08 + i * 0.08}s` }"
+        @click="onCardClick($event, item)"
       >
         <span
           class="home-page__icon"
@@ -37,7 +38,7 @@
         </span>
         <span class="home-page__label">{{ item.name }}</span>
         <span class="home-page__hint">{{ item.hint }}</span>
-      </RouterLink>
+      </button>
     </nav>
 
     <p class="home-page__footer">{{ pageConfig.footer }}</p>
@@ -45,9 +46,35 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
-import { getMonthAge, menus, pageConfig } from './config'
+import { useRouter } from 'vue-router'
+import { getMonthAge, menus, pageConfig, type MenuItem } from './config'
 import './index.scss'
 
+const router = useRouter()
 const monthAge = getMonthAge()
+
+function spawnRipple(event: MouseEvent, card: HTMLElement, color: string) {
+  const rect = card.getBoundingClientRect()
+  const size = Math.max(rect.width, rect.height) * 1.25
+  const x = event.clientX - rect.left - size / 2
+  const y = event.clientY - rect.top - size / 2
+
+  const ripple = document.createElement('span')
+  ripple.className = 'home-page__ripple'
+  ripple.style.width = `${size}px`
+  ripple.style.height = `${size}px`
+  ripple.style.left = `${x}px`
+  ripple.style.top = `${y}px`
+  ripple.style.setProperty('--ripple-color', color)
+  card.appendChild(ripple)
+  window.setTimeout(() => ripple.remove(), 650)
+}
+
+function onCardClick(event: MouseEvent, item: MenuItem) {
+  const card = event.currentTarget as HTMLElement
+  spawnRipple(event, card, item.toColor)
+  window.setTimeout(() => {
+    void router.push({ name: item.routeName }).catch(() => router.push(item.to))
+  }, 120)
+}
 </script>

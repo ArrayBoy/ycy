@@ -150,7 +150,7 @@ $brand: #2a9d8f;
 
   &__menu {
     position: relative;
-    z-index: 1;
+    z-index: 3;
     flex: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -160,14 +160,16 @@ $brand: #2a9d8f;
   }
 
   &__card {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    width: 100%;
     min-height: 128px;
     padding: 18px 12px;
-    text-decoration: none;
     color: $ink;
     border-radius: 28px;
     background: rgba(255, 255, 255, 0.72);
@@ -177,6 +179,12 @@ $brand: #2a9d8f;
     animation: home-rise 0.65s ease-out both;
     user-select: none;
     -webkit-user-select: none;
+    overflow: hidden;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    font: inherit;
+    -webkit-tap-highlight-color: transparent;
     transition:
       transform 0.2s ease,
       box-shadow 0.2s ease;
@@ -187,7 +195,23 @@ $brand: #2a9d8f;
     }
   }
 
+  &__ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--ripple-color, #2a9d8f) 42%, transparent) 0%,
+      transparent 70%
+    );
+    transform: scale(0);
+    animation: home-ripple 0.6s ease-out forwards;
+    pointer-events: none;
+    z-index: 0;
+  }
+
   &__icon {
+    position: relative;
+    z-index: 1;
     width: 64px;
     height: 64px;
     border-radius: 22px;
@@ -204,12 +228,16 @@ $brand: #2a9d8f;
   }
 
   &__label {
+    position: relative;
+    z-index: 1;
     font-family: 'ZCOOL KuaiLe', cursive;
     font-size: 26px;
     letter-spacing: 0.08em;
   }
 
   &__hint {
+    position: relative;
+    z-index: 1;
     font-size: 12px;
     color: $ink-soft;
     letter-spacing: 0.04em;
@@ -248,5 +276,12 @@ $brand: #2a9d8f;
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes home-ripple {
+  to {
+    transform: scale(2.4);
+    opacity: 0;
   }
 }

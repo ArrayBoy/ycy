@@ -9,7 +9,8 @@ import { pageConfig as xuexiConfig } from '@/views/xuexi/config'
 
 const router = createRouter({
   // Hash 路由：纯静态部署可直接打开 index.html，无需服务端回退
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  // 不传 './' base，避免相对 base 在部分环境下匹配异常
+  history: createWebHashHistory(),
   routes: [
     {
       path: homeConfig.path,
