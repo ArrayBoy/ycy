@@ -68,15 +68,41 @@ const router = createRouter({
     },
     {
       path: donghuaConfig.path,
-      name: donghuaConfig.name,
       component: () => import('@/views/donghua/index.vue'),
       meta: { title: donghuaConfig.title },
+      children: [
+        {
+          path: '',
+          name: donghuaConfig.name,
+          component: () => import('@/views/donghua/components/AnimeList.vue'),
+          meta: { title: donghuaConfig.title },
+        },
+        {
+          path: 'detail/:id',
+          name: 'donghua-detail',
+          component: () => import('@/views/donghua/components/AnimeDetail.vue'),
+          meta: { title: '动画详情' },
+        },
+      ],
     },
     {
       path: ergeConfig.path,
-      name: ergeConfig.name,
       component: () => import('@/views/erge/index.vue'),
       meta: { title: ergeConfig.title },
+      children: [
+        {
+          path: '',
+          name: ergeConfig.name,
+          component: () => import('@/views/erge/components/SongList.vue'),
+          meta: { title: ergeConfig.title },
+        },
+        {
+          path: 'detail/:id',
+          name: 'erge-detail',
+          component: () => import('@/views/erge/components/SongDetail.vue'),
+          meta: { title: '儿歌详情' },
+        },
+      ],
     },
     {
       path: gushiConfig.path,
@@ -99,9 +125,64 @@ const router = createRouter({
     },
     {
       path: xuexiConfig.path,
-      name: xuexiConfig.name,
       component: () => import('@/views/xuexi/index.vue'),
       meta: { title: xuexiConfig.title },
+      children: [
+        {
+          path: '',
+          name: xuexiConfig.name,
+          component: () => import('@/views/xuexi/Home.vue'),
+          meta: { title: xuexiConfig.title },
+        },
+        {
+          path: 'shici',
+          name: 'xuexi-shici',
+          component: () => import('@/views/xuexi/shici/List.vue'),
+          meta: { title: '诗词' },
+        },
+        {
+          path: 'shici/:id',
+          name: 'xuexi-shici-detail',
+          component: () => import('@/views/xuexi/shici/Detail.vue'),
+          meta: { title: '诗词详情' },
+        },
+        {
+          path: 'shuzi',
+          name: 'xuexi-shuzi',
+          component: () => import('@/views/xuexi/shuzi/List.vue'),
+          meta: { title: '数字' },
+        },
+        {
+          path: 'shuzi/:id',
+          name: 'xuexi-shuzi-detail',
+          component: () => import('@/views/xuexi/shuzi/Detail.vue'),
+          meta: { title: '数字详情' },
+        },
+        {
+          path: 'wenzi',
+          name: 'xuexi-wenzi',
+          component: () => import('@/views/xuexi/wenzi/List.vue'),
+          meta: { title: '文字' },
+        },
+        {
+          path: 'wenzi/:id',
+          name: 'xuexi-wenzi-detail',
+          component: () => import('@/views/xuexi/wenzi/Detail.vue'),
+          meta: { title: '文字详情' },
+        },
+        {
+          path: 'yingyu',
+          name: 'xuexi-yingyu',
+          component: () => import('@/views/xuexi/yingyu/List.vue'),
+          meta: { title: '英语' },
+        },
+        {
+          path: 'yingyu/:id',
+          name: 'xuexi-yingyu-detail',
+          component: () => import('@/views/xuexi/yingyu/Detail.vue'),
+          meta: { title: '英语详情' },
+        },
+      ],
     },
   ],
   scrollBehavior() {

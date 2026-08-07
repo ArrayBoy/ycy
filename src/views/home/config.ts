@@ -18,7 +18,23 @@ export const pageConfig = {
   tagline: '宝宝成长站',
   footer: '轻轻点一点，开启今天的陪伴',
   avatar: publicUrl('piblic/tx.jpg'),
+  /** 宝宝生日 YYYY-MM-DD */
+  birthday: '2024-11-19',
 } as const
+
+/** 按出生日计算已满月龄 */
+export function getMonthAge(birthday = pageConfig.birthday, today = new Date()) {
+  const [y, m, d] = birthday.split('-').map(Number)
+  const birth = new Date(y, m - 1, d)
+  let months =
+    (today.getFullYear() - birth.getFullYear()) * 12 + (today.getMonth() - birth.getMonth())
+  if (today.getDate() < birth.getDate()) months -= 1
+  return Math.max(0, months)
+}
+
+export function formatMonthAge(months = getMonthAge()) {
+  return `${months}个月`
+}
 
 export const menus: MenuItem[] = [
   {

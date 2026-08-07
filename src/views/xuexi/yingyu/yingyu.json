@@ -1,0 +1,126 @@
+{
+  "title": "英语",
+  "subtitle": "边看边说，轻轻开口",
+  "items": [
+    {
+      "id": 1,
+      "word": "Apple",
+      "phonetic": "/ˈæpl/",
+      "summary": "红红的苹果",
+      "meaning": "苹果",
+      "category": "水果",
+      "example": "I like apple.",
+      "exampleZh": "我喜欢苹果。"
+    },
+    {
+      "id": 2,
+      "word": "Ball",
+      "phonetic": "/bɔːl/",
+      "summary": "圆圆会滚的球",
+      "meaning": "球",
+      "category": "玩具",
+      "example": "Kick the ball.",
+      "exampleZh": "踢球。"
+    },
+    {
+      "id": 3,
+      "word": "Cat",
+      "phonetic": "/kæt/",
+      "summary": "喵喵叫的小猫",
+      "meaning": "猫",
+      "category": "动物",
+      "example": "A cat is soft.",
+      "exampleZh": "小猫软软的。"
+    },
+    {
+      "id": 4,
+      "word": "Dog",
+      "phonetic": "/dɒɡ/",
+      "summary": "汪汪叫的小狗",
+      "meaning": "狗",
+      "category": "动物",
+      "example": "The dog runs.",
+      "exampleZh": "小狗在跑。"
+    },
+    {
+      "id": 5,
+      "word": "Egg",
+      "phonetic": "/eɡ/",
+      "summary": "圆圆的鸡蛋",
+      "meaning": "鸡蛋",
+      "category": "食物",
+      "example": "I eat an egg.",
+      "exampleZh": "我吃一个鸡蛋。"
+    },
+    {
+      "id": 6,
+      "word": "Fish",
+      "phonetic": "/fɪʃ/",
+      "summary": "水里游的小鱼",
+      "meaning": "鱼",
+      "category": "动物",
+      "example": "Fish can swim.",
+      "exampleZh": "鱼会游泳。"
+    },
+    {
+      "id": 7,
+      "word": "Sun",
+      "phonetic": "/sʌn/",
+      "summary": "白天的太阳",
+      "meaning": "太阳",
+      "category": "自然",
+      "example": "The sun is bright.",
+      "exampleZh": "太阳很亮。"
+    },
+    {
+      "id": 8,
+      "word": "Moon",
+      "phonetic": "/muːn/",
+      "summary": "晚上的月亮",
+      "meaning": "月亮",
+      "category": "自然",
+      "example": "I see the moon.",
+      "exampleZh": "我看见月亮。"
+    },
+    {
+      "id": 9,
+      "word": "Hello",
+      "phonetic": "/həˈləʊ/",
+      "summary": "见面时打招呼",
+      "meaning": "你好",
+      "category": "用语",
+      "example": "Hello, friend!",
+      "exampleZh": "你好，朋友！"
+    },
+    {
+      "id": 10,
+      "word": "Bye",
+      "phonetic": "/baɪ/",
+      "summary": "离开时说再见",
+      "meaning": "再见",
+      "category": "用语",
+      "example": "Bye-bye!",
+      "exampleZh": "再见！"
+    },
+    {
+      "id": 11,
+      "word": "Red",
+      "phonetic": "/red/",
+      "summary": "像草莓一样的颜色",
+      "meaning": "红色",
+      "category": "颜色",
+      "example": "A red apple.",
+      "exampleZh": "一个红苹果。"
+    },
+    {
+      "id": 12,
+      "word": "Blue",
+      "phonetic": "/bluː/",
+      "summary": "像天空一样的颜色",
+      "meaning": "蓝色",
+      "category": "颜色",
+      "example": "Blue sky.",
+      "exampleZh": "蓝蓝的天空。"
+    }
+  ]
+}

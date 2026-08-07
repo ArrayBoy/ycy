@@ -1,6 +1,13 @@
 <template>
   <div class="home-page">
     <img class="home-page__avatar" :src="pageConfig.avatar" alt="头像" />
+    <div class="home-page__age" aria-label="宝宝月龄">
+      <span class="home-page__age-num">{{ monthAge }}</span>
+      <span class="home-page__age-unit">
+        <em>月龄</em>
+        <small>个月</small>
+      </span>
+    </div>
 
     <div class="home-page__blob home-page__blob--a" aria-hidden="true" />
     <div class="home-page__blob home-page__blob--b" aria-hidden="true" />
@@ -39,6 +46,8 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { menus, pageConfig } from './config'
+import { getMonthAge, menus, pageConfig } from './config'
 import './index.scss'
+
+const monthAge = getMonthAge()
 </script>
