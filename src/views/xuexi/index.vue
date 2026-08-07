@@ -1,5 +1,5 @@
 <template>
-  <div class="xuexi-page">
+  <div class="xuexi-page" :class="{ 'is-draw': isDraw }">
     <div class="xuexi-page__glow xuexi-page__glow--a" aria-hidden="true" />
     <div class="xuexi-page__glow xuexi-page__glow--b" aria-hidden="true" />
 
@@ -21,7 +21,7 @@
       <span v-else class="xuexi-page__home-spacer" aria-hidden="true" />
     </header>
 
-    <main class="xuexi-page__content">
+    <main class="xuexi-page__content" :class="{ 'xuexi-page__content--draw': isDraw }">
       <RouterView />
     </main>
   </div>
@@ -41,6 +41,7 @@ const route = useRoute()
 const router = useRouter()
 
 const isHome = computed(() => route.name === pageConfig.name)
+const isDraw = computed(() => route.name === 'xuexi-huahua')
 
 const moduleKey = computed(() => {
   const name = String(route.name || '')
@@ -48,6 +49,7 @@ const moduleKey = computed(() => {
   if (name.includes('shuzi')) return 'shuzi'
   if (name.includes('wenzi')) return 'wenzi'
   if (name.includes('yingyu')) return 'yingyu'
+  if (name.includes('huahua')) return 'huahua'
   return ''
 })
 
@@ -72,7 +74,8 @@ const headerTitle = computed(() => {
 })
 
 const headerSub = computed(() => {
-  if (isHome.value) return `${pageConfig.subtitle} · 四大板块`
+  if (isHome.value) return `${pageConfig.subtitle} · 五大板块`
+  if (route.name === 'xuexi-huahua') return '选颜色、选粗细，开心画一画'
   if (route.name === 'xuexi-shici') return `${shiciData.subtitle} · ${shiciData.items.length} 首`
   if (route.name === 'xuexi-shuzi') return `${shuziData.subtitle} · ${shuziData.items.length} 个`
   if (route.name === 'xuexi-wenzi') return `${wenziData.subtitle} · ${wenziData.items.length} 个`

@@ -5,7 +5,7 @@ export const pageConfig = {
   subtitle: '启蒙小课堂',
 } as const
 
-export type XuexiModuleKey = 'shici' | 'shuzi' | 'wenzi' | 'yingyu'
+export type XuexiModuleKey = 'shici' | 'shuzi' | 'wenzi' | 'yingyu' | 'huahua'
 
 export interface XuexiModuleMeta {
   key: XuexiModuleKey
@@ -14,7 +14,7 @@ export interface XuexiModuleMeta {
   path: string
   routeName: string
   listName: string
-  detailName: string
+  detailName?: string
   accentFrom: string
   accentTo: string
   mark: string
@@ -68,6 +68,17 @@ export const modules: XuexiModuleMeta[] = [
     accentFrom: '#99f6e4',
     accentTo: '#0f766e',
     mark: 'A',
+  },
+  {
+    key: 'huahua',
+    name: '画画',
+    hint: '画一画想象',
+    path: 'huahua',
+    routeName: 'xuexi-huahua',
+    listName: 'xuexi-huahua',
+    accentFrom: '#f9a8d4',
+    accentTo: '#db2777',
+    mark: '画',
   },
 ]
 

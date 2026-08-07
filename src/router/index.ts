@@ -183,6 +183,12 @@ const router = createRouter({
           component: () => import('@/views/xuexi/yingyu/Detail.vue'),
           meta: { title: '英语详情' },
         },
+        {
+          path: 'huahua',
+          name: 'xuexi-huahua',
+          component: () => import('@/views/xuexi/huahua/Draw.vue'),
+          meta: { title: '画画' },
+        },
       ],
     },
   ],

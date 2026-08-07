@@ -6,7 +6,7 @@ export const pageConfig = {
   path: '/donghua',
 } as const
 
-/** 暂时统一的演示播放地址，后续可按条目替换 */
+/** 默认演示地址：Big Buck Bunny（Blender 开源短片） */
 export const DEMO_PLAY_URL = 'https://www.youtube.com/embed/aqz-KE-bpKQ?rel=0'
 
 export interface AnimeItem {
