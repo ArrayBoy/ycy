@@ -21,7 +21,9 @@
         </button>
       </div>
       <p class="story-detail__summary">{{ story.summary }}</p>
-      <p class="story-detail__time">大约 {{ story.minutes }} 分钟读完</p>
+      <p class="story-detail__time">
+        大约 {{ story.minutes }} 分钟读完 · 全文 {{ storyCharCount }} 个字
+      </p>
     </header>
 
     <div class="story-detail__font-bar">
@@ -45,7 +47,12 @@
 
     <footer class="story-detail__footer">
       <p>讲完啦，给宝宝一个晚安拥抱吧</p>
-      <button class="story-detail__again" type="button" @click="goList">再听一个故事</button>
+      <div class="story-detail__footer-actions">
+        <button class="story-detail__again" type="button" @click="goPrev">上一个故事</button>
+        <button class="story-detail__again story-detail__next" type="button" @click="goNext">
+          下一个故事
+        </button>
+      </div>
     </footer>
 
     <div v-if="toastVisible" class="gushi-toast">{{ toastText }}</div>
@@ -59,6 +66,8 @@ import { useRoute, useRouter } from 'vue-router'
 import {
   STORY_FONT_DEFAULT,
   STORY_FONT_MAX,
+  getNextStoryId,
+  getPrevStoryId,
   getStoryById,
   isFavorite,
   parseRouteParam,
@@ -84,6 +93,15 @@ const storyId = computed(() => {
 })
 
 const story = computed(() => (storyId.value === null ? null : getStoryById(storyId.value)))
+
+const nextStoryId = computed(() => (storyId.value === null ? null : getNextStoryId(storyId.value)))
+
+const prevStoryId = computed(() => (storyId.value === null ? null : getPrevStoryId(storyId.value)))
+
+const storyCharCount = computed(() => {
+  if (!story.value) return 0
+  return story.value.content.join('').replace(/\s/g, '').length
+})
 
 watch(
   storyId,
@@ -120,12 +138,14 @@ function resetFont() {
   saveStoryFontSize(fontSize.value)
 }
 
-function goList() {
-  if (route.query.from === 'favorites') {
-    router.push({ name: 'gushi' })
-    return
-  }
-  router.push({ name: 'gushi' })
+function goPrev() {
+  if (prevStoryId.value === null) return
+  router.push({ name: 'gushi-detail', params: { id: String(prevStoryId.value) } })
+}
+
+function goNext() {
+  if (nextStoryId.value === null) return
+  router.push({ name: 'gushi-detail', params: { id: String(nextStoryId.value) } })
 }
 
 onBeforeUnmount(() => {

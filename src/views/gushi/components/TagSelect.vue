@@ -43,8 +43,11 @@
               @click="pick(item.value)"
             >
               <span class="tag-select__option-text">{{ item.label }}</span>
-              <span v-if="modelValue === item.value" class="tag-select__check" aria-hidden="true">
-                ✓
+              <span class="tag-select__option-right">
+                <span class="tag-select__option-count">{{ item.count }}</span>
+                <span v-if="modelValue === item.value" class="tag-select__check" aria-hidden="true">
+                  ✓
+                </span>
               </span>
             </button>
           </div>
@@ -56,6 +59,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { gushiData } from '../config'
 
 const props = withDefaults(
   defineProps<{
@@ -76,9 +80,23 @@ const emit = defineEmits<{
 
 const open = ref(false)
 
+const totalCount = gushiData.stories.length
+
+const tagCounts = computed(() => {
+  const counts = new Map<string, number>()
+  for (const story of gushiData.stories) {
+    counts.set(story.tag, (counts.get(story.tag) ?? 0) + 1)
+  }
+  return counts
+})
+
 const items = computed(() => [
-  { value: '', label: props.allLabel },
-  ...props.options.map((tag) => ({ value: tag, label: tag })),
+  { value: '', label: props.allLabel, count: `${totalCount}篇` },
+  ...props.options.map((tag) => ({
+    value: tag,
+    label: tag,
+    count: `${tagCounts.value.get(tag) ?? 0}篇`,
+  })),
 ])
 
 const displayText = computed(() => {
@@ -284,6 +302,23 @@ onBeforeUnmount(() => {
 
 .tag-select__option-text {
   min-width: 0;
+}
+
+.tag-select__option-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.tag-select__option-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8aa0ad;
+}
+
+.tag-select__option.active .tag-select__option-count {
+  color: rgba(255, 255, 255, 0.86);
 }
 
 .tag-select__check {

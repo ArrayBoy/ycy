@@ -31,6 +31,24 @@ export function getStoryById(id: number | string) {
   return gushiData.stories.find((item) => item.id === num) ?? null
 }
 
+export function getNextStoryId(id: number | string) {
+  const num = Number(id)
+  if (!Number.isFinite(num)) return null
+  const index = gushiData.stories.findIndex((item) => item.id === num)
+  if (index < 0) return null
+  const next = gushiData.stories[(index + 1) % gushiData.stories.length]
+  return next.id
+}
+
+export function getPrevStoryId(id: number | string) {
+  const num = Number(id)
+  if (!Number.isFinite(num)) return null
+  const index = gushiData.stories.findIndex((item) => item.id === num)
+  if (index < 0) return null
+  const prev = gushiData.stories[(index - 1 + gushiData.stories.length) % gushiData.stories.length]
+  return prev.id
+}
+
 export function getAllTags() {
   if (gushiData.tags?.length) return [...gushiData.tags]
   return [...new Set(gushiData.stories.map((item) => item.tag))]
@@ -50,9 +68,7 @@ export function readFavoriteIds(): number[] {
     const parsed = JSON.parse(raw)
     if (!Array.isArray(parsed)) return []
     const idSet = new Set(gushiData.stories.map((item) => item.id))
-    return parsed
-      .map((item) => Number(item))
-      .filter((id) => Number.isInteger(id) && idSet.has(id))
+    return parsed.map((item) => Number(item)).filter((id) => Number.isInteger(id) && idSet.has(id))
   } catch {
     return []
   }

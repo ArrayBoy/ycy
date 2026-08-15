@@ -443,6 +443,14 @@ $line: rgba(95, 125, 144, 0.16);
       font-size: 13px;
       color: $muted;
     }
+
+    &-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
   }
 
   &__again {
@@ -459,6 +467,13 @@ $line: rgba(95, 125, 144, 0.16);
     &:active {
       transform: scale(0.97);
     }
+  }
+
+  &__next {
+    background: $surface;
+    color: $ink;
+    border: 1.5px solid $line;
+    box-shadow: 0 6px 16px rgba(31, 58, 77, 0.08);
   }
 }
 
